@@ -6,17 +6,20 @@ export async function POST(req: Request) {
 
   const result = streamText({
     model: openai("gpt-4.1-nano"),
-    messages: await convertToModelMessages(messages),
+    messages: [
+      { role: "system", content: "You are a helpful assistant." },
+      ...(await convertToModelMessages(messages)),
+    ],
   });
 
-//   result?.usage?.then((usage) => {
-//     console.log({
-//         messageCount : messages.length,
-//         inputTokens : usage.inputTokens,
-//         outputTokens : usage.outputTokens,
-//         totalTokens : usage.totalTokens,
-//     });
-//   });
+  //   result?.usage?.then((usage) => {
+  //     console.log({
+  //         messageCount : messages.length,
+  //         inputTokens : usage.inputTokens,
+  //         outputTokens : usage.outputTokens,
+  //         totalTokens : usage.totalTokens,
+  //     });
+  //   });
 
   return result.toUIMessageStreamResponse();
 }
